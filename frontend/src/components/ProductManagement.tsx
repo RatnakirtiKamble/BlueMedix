@@ -25,7 +25,6 @@ const ProductManagement: React.FC = () => {
         </ul>
       </div>
 
-      {/* Content Area */}
       <div className="mt-4">
         {activeTab === "fetchProducts" && <FetchProducts />}
         {activeTab === "addProduct" && <AddProduct />}

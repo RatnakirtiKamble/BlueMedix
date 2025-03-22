@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-// Authenticate User
 exports.auth = (req, res, next) => {
   const token = req.header("Authorization");
   if (!token) return res.status(401).json({ message: "Access Denied" });
@@ -15,7 +14,6 @@ exports.auth = (req, res, next) => {
   }
 };
 
-// Restrict Access Based on Role
 exports.authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

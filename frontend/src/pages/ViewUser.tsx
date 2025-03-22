@@ -31,7 +31,7 @@ const ViewUser: React.FC = () => {
       toast.success("User deleted successfully!", {
         position: "top-center",
         autoClose: 2000,
-        onClose: () => navigate(-1), // Navigate after the toast disappears
+        onClose: () => navigate(-1), 
       });
     },
   });
@@ -41,7 +41,7 @@ const ViewUser: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center h-[calc(100vh-73px)] bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 p-6">
-      <ToastContainer /> {/* Toast notification container */}
+      <ToastContainer /> 
       
       <div className="bg-white/20 backdrop-blur-lg shadow-xl rounded-2xl p-8 w-full max-w-lg text-white text-center border border-white/30">
         <UserCircle size={80} className="mx-auto text-white/80 mb-4" />
@@ -72,7 +72,6 @@ const ViewUser: React.FC = () => {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-md">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-center text-gray-800">

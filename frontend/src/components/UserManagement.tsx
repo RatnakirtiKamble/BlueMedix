@@ -25,7 +25,6 @@ const UserManagement: React.FC = () => {
         </ul>
       </div>
 
-      {/* Content Area */}
       <div className="mt-4">
         {activeTab === "showUsers" && <ShowUsers />}
         {activeTab === "addUser" && <AddUser />}
