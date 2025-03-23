@@ -6,7 +6,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 const authRoutes = require("./routes/auth");
 
-// Import database and models
 const sequelize = require("./config/database");
 const Product = require("./models/Product");
 const User = require("./models/User");
@@ -83,8 +82,8 @@ app.delete("/users/:id", async (req, res) => {
   res.json({ message: "User deleted successfully" });
 });
 
-// Start server and sync database
+
 app.listen(port, async () => {
-  await sequelize.sync({ alter: true }); // Ensure tables exist
+  await sequelize.sync({ alter: true }); 
   console.log(`Server running on http://localhost:${port}`);
 });
