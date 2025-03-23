@@ -19,6 +19,8 @@ router.post(
   "/register",
   [
     body("name").notEmpty(),
+    body("gender").notEmpty(),
+    body("age").notEmpty(),
     body("email").isEmail(),
     body("password").isLength({ min: 6 }),
     body("role").optional().isIn(["isAdmin", "isCustomer", "isSeller"]),
@@ -28,19 +30,19 @@ router.post(
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
     try {
-      const { name, email, password, role } = req.body;
+      const { name, gender, age, email, password, role } = req.body;
       let user = await User.findOne({ where: { email } });
       if (user) return res.status(400).json({ message: "User already exists" });
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      user = await User.create({ name, email, password: hashedPassword, role });
+      user = await User.create({ name, gender, age, email, password: hashedPassword, role });
 
       const token = generateToken(user);
 
       res.status(201).json({ token });
     } catch (err) {
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: err.message });
     }
   }
 );
@@ -67,7 +69,7 @@ router.post(
 
       res.json({ token });
     } catch (err) {
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: err.message });
     }
   }
 );

@@ -18,7 +18,7 @@ app.use(cors());
 app.use(helmet());
 
 // Routes
-app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes);
 
 // CRUD routes for products
 app.get("/products", async (req, res) => {
