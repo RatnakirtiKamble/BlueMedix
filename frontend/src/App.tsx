@@ -15,7 +15,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route path="/auth" element={<Authentication />} />
         <Route element={<PrivateRoute />}>
-          <Route path="/admin" element={<Index />} />
+          <Route path="/" element={<Index />} />
           <Route path="/products/:id" element={<ViewProduct />} />
           <Route path="/products/:id/edit" element={<EditProduct />} />
           <Route path="/users/:id" element={<ViewUser />} />

@@ -47,13 +47,13 @@ const ViewProduct: React.FC = () => {
             <Trash color="darkred" />
           </button>
         </div>
-        <img src={data.image} alt={data.title} className="w-full h-64 object-contain mb-4" />
+        <img src={data.image} alt={data.title} className="w-full h-64 object-contain mb-4 pt-2" />
         <h1 className="text-2xl font-bold">{data.title}</h1>
         <p className="text-gray-600">{data.description}</p>
         <p className="text-2xl font-bold text-green-600 mt-2">${data.price}</p>
       </div>
 
-      {/* Delete Confirmation Modal */}
+  
       {showDeleteModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">

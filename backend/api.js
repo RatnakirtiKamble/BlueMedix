@@ -84,6 +84,7 @@ app.delete("/users/:id", async (req, res) => {
 
 
 app.listen(port, async () => {
+  
   await sequelize.sync({ alter: true }); 
   console.log(`Server running on http://localhost:${port}`);
 });

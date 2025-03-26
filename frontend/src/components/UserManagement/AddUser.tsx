@@ -22,7 +22,7 @@ const AddUser: React.FC = () => {
     },
     onSuccess: () => {
       toast.success("User added successfully!", { autoClose: 2000 });
-      setTimeout(() => navigate(-1), 2500);
+      setTimeout(() => navigate('/'), 2500);
     },
     onError: () => {
       toast.error("Failed to add user. Please try again.");
@@ -112,7 +112,7 @@ const AddUser: React.FC = () => {
 
         <button
           type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-800"
+          className="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-800"
         >
           Add User
         </button>

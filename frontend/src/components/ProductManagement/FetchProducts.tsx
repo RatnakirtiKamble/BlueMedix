@@ -10,14 +10,13 @@ const fetchProducts = async () => {
 
 const FetchProducts: React.FC = () => {
   const { data, isLoading, error } = useQuery({ queryKey: ["products"], queryFn: fetchProducts });
-  const navigate = useNavigate(); // ✅ Use navigate for routing
+  const navigate = useNavigate(); 
 
   if (isLoading) return <p className="text-center">Loading products...</p>;
   if (error) return <p className="text-center text-red-500">Error loading products.</p>;
 
   return (
     <div className="p-4">
-      {/* ✅ Scrollable Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 overflow-auto max-h-[500px] p-2">
         {data?.map((product: any) => (
           <div key={product.id} className="bg-white shadow-md rounded-lg p-4 hover:scale-105 transition-transform border">
@@ -25,7 +24,7 @@ const FetchProducts: React.FC = () => {
             <h2 className="text-lg font-semibold truncate">{product.title}</h2>
             <p className="text-lg font-bold text-green-600 mt-2">${product.price}</p>
             <button
-              onClick={() => navigate(`/products/${product.id}`)} // ✅ Navigate to product details page
+              onClick={() => navigate(`/products/${product.id}`)} 
               className="mt-3 w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded"
             >
               View Product

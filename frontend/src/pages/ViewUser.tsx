@@ -44,6 +44,7 @@ const ViewUser: React.FC = () => {
       <ToastContainer /> 
       
       <div className="bg-white/20 backdrop-blur-lg shadow-xl rounded-2xl p-8 w-full max-w-lg text-white text-center border border-white/30">
+        <XCircle size={40} onClick={() => navigate("/") }/>
         <UserCircle size={80} className="mx-auto text-white/80 mb-4" />
         <h1 className="text-3xl font-bold mb-2">{data.name}</h1>
         <p className="text-lg text-white/70">{data.email}</p>

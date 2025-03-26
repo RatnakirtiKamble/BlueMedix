@@ -29,12 +29,12 @@ const EditUser: React.FC = () => {
       toast.success("User updated successfully!", {
         position: "top-center",
         autoClose: 2000,
-        onClose: () => navigate(`/users/${id}`), // Navigate after toast disappears
+        onClose: () => navigate(`/users/${id}`), 
       });
     },
   });
 
-  // Local state for form inputs
+ 
   const [formData, setFormData] = useState({
     name: "",
     gender: "",
@@ -43,7 +43,6 @@ const EditUser: React.FC = () => {
     role: "",
   });
 
-  // Update local state when data is fetched
   React.useEffect(() => {
     if (data) {
       setFormData({
@@ -56,12 +55,11 @@ const EditUser: React.FC = () => {
     }
   }, [data]);
 
-  // Handle form input changes
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutation.mutate(formData);
@@ -154,7 +152,7 @@ const EditUser: React.FC = () => {
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 bg-green-500 text-white px-5 py-2 rounded-lg shadow-lg hover:bg-green-600 transition"
+              className="flex items-center gap-2 bg-orange-500 text-white px-5 py-2 rounded-lg shadow-lg hover:bg-orange-600 transition"
             >
               <Save size={16} />
               Save

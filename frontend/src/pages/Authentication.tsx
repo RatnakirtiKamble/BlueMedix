@@ -38,7 +38,7 @@ const Authentication = () => {
         const { token, role } = response.data;
         localStorage.setItem("jwt", token);
         localStorage.setItem("role", role);
-        navigate(role === "isAdmin" ? "/admin" : "/");
+        navigate(role === "isAdmin" ? "/" : "/customer");
       } else {
         setIsLogin(true);
       }
@@ -50,7 +50,7 @@ const Authentication = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
+    <div className="flex items-center justify-center h-[calc(100vh-73px)] bg-gray-100">
       {showModal && (
         <div className="bg-white p-6 rounded-lg shadow-lg w-96">
           <h2 className="text-xl font-bold mb-4">{isLogin ? "Login" : "Register"}</h2>

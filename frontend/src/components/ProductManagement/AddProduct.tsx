@@ -15,12 +15,10 @@ const AddProduct: React.FC = () => {
 
   const navigate = useNavigate();
 
-  // Handle form changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Submit form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
