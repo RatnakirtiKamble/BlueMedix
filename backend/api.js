@@ -1,90 +1,99 @@
-require("dotenv").config();
-const bcrypt = require("bcrypt");
 const express = require("express");
-const axios = require("axios");
-const cors = require("cors");
-const helmet = require("helmet");
-const authRoutes = require("./routes/auth");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { body, validationResult } = require("express-validator");
+const User = require("../models/User");
+const { auth, authorize } = require("../middleware/authMiddleware"); 
+const router = express.Router();
+require("dotenv").config();
 
-const sequelize = require("./config/database");
-const Product = require("./models/Product");
-const User = require("./models/User");
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN }
+  );
+};
 
-const app = express();
-const port = 5000;
+router.post(
+  "/register",
+  [
+    body("name").notEmpty(),
+    body("gender").notEmpty(),
+    body("age").notEmpty(),
+    body("email").isEmail(),
+    body("password").isLength({ min: 6 }),
+  ],
+  auth, 
+  authorize("admin"), 
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-app.use(express.json());
-app.use(cors());
-app.use(helmet());
+    try {
+      const { name, gender, age, email, password } = req.body;
+      let user = await User.findOne({ email });
 
-// Routes
-app.use("/auth", authRoutes);
+      if (user) return res.status(400).json({ message: "User already exists" });
 
-// CRUD routes for products
-app.get("/products", async (req, res) => {
-  const products = await Product.findAll();
-  res.json(products);
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      user = await User.create({ name, gender, age, email, password: hashedPassword, role: "user" });
+
+      const token = generateToken(user);
+      res.status(201).json({ token });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  }
+);
+
+router.post(
+  "/login",
+  [
+    body("email").isEmail(),
+    body("password").exists(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email }); 
+
+      if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+
+      const token = generateToken(user);
+      res.json({ token, role: user.role, id: user.id });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  }
+);
+
+router.get("/users", auth, authorize("admin"), async (req, res) => {
+  try {
+    const users = await User.find().select("-password"); 
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
-app.get("/products/:id", async (req, res) => {
-  const product = await Product.findByPk(req.params.id);
-  product ? res.json(product) : res.status(404).send("Product not found");
+router.delete("/users/:id", auth, authorize("admin"), async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
-app.post("/products", async (req, res) => {
-  const product = await Product.create(req.body);
-  res.status(201).json(product);
-});
-
-app.put("/products/:id", async (req, res) => {
-  const product = await Product.findByPk(req.params.id);
-  if (!product) return res.status(404).send("Product not found");
-  await product.update(req.body);
-  res.json({ message: "Product updated successfully", product });
-});
-
-app.delete("/products/:id", async (req, res) => {
-  const product = await Product.findByPk(req.params.id);
-  if (!product) return res.status(404).send("Product not found");
-  await product.destroy();
-  res.json({ message: "Product deleted successfully" });
-});
-
-// CRUD routes for users
-app.get("/users", async (req, res) => {
-  const users = await User.findAll();
-  res.json(users);
-});
-
-app.get("/users/:id", async (req, res) => {
-  const user = await User.findByPk(req.params.id);
-  user ? res.json(user) : res.status(404).send("User not found");
-});
-
-app.post("/users", async (req, res) => {
-  const { name, gender, age, email, password, role } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({ name, gender, age, email, password: hashedPassword, role });
-  res.status(201).json(user);
-});
-
-app.put("/users/:id", async (req, res) => {
-  const user = await User.findByPk(req.params.id);
-  if (!user) return res.status(404).send("User not found");
-  await user.update(req.body);
-  res.json({ message: "User updated successfully", user });
-});
-
-app.delete("/users/:id", async (req, res) => {
-  const user = await User.findByPk(req.params.id);
-  if (!user) return res.status(404).send("User not found");
-  await user.destroy();
-  res.json({ message: "User deleted successfully" });
-});
-
-
-app.listen(port, async () => {
-  
-  await sequelize.sync({ alter: true }); 
-  console.log(`Server running on http://localhost:${port}`);
-});
+module.exports = router;
